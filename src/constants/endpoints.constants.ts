@@ -1,4 +1,4 @@
-const key = '?key=b85df860659c46eeb75a3b1da6f8177a';
+const key = '?key=cd865ed95e11486d80976fe50b13bc5e';
 const registration = '403769';
 const api = 'rawg'
 

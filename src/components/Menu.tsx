@@ -16,7 +16,6 @@ type Genre = {
 
 export function Menu({ onMenuGenreClick }: MenuProps) {
     const [genres, setGenres] = useState<Genre[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
 
     const registerLog = async (method: string, ret: string) => {
         try {
@@ -33,50 +32,29 @@ export function Menu({ onMenuGenreClick }: MenuProps) {
         } catch (error) {
           console.error('Error registering log:', error);
         }
-      }
+    }
+
+    const fetchGenres = async () => {
+        try {
+            const response = await fetch(GET_LIST_VIDEO_GAMES_GENRES);
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            setGenres(data.results);
+
+            registerLog('GET_LIST_VIDEO_GAMES_GENRES', data.results.length);
+        } catch {
+            console.log('Error when searching genres');
+        }
+    };
 
     useEffect(() => {
-        const fetchGenres = async () => {
-            try {
-                const response = await fetch(GET_LIST_VIDEO_GAMES_GENRES);
-
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-
-                const data = await response.json();
-
-                setGenres(data.results || data);
-                setLoading(false);
-
-                registerLog('GET_LIST_VIDEO_GAMES_GENRES', data.results.length);
-            } catch {
-                console.log('Error when searching genres');
-                setLoading(false);
-            }
-        };
-
         fetchGenres();
     }, []);
-
-    if (loading) {
-        return (
-            <Navbar expand="lg" className="bg-body-tertiary">
-                <Container>
-                    <Navbar.Brand href="#home">Games Search</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link href="#home">Home</Nav.Link>
-                            <NavDropdown title="Genres" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#home">All</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-        );
-    }
 
     return (
 

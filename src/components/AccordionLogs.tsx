@@ -41,9 +41,9 @@ export function AccordionLogs() {
                     throw new Error(`Error: ${response.statusText}`);
                 }
     
-                const data = await response.json();
+                const data: Log[] = await response.json();
 
-                setLogs(data);
+                setLogs(data.sort(sortByDate).slice(0, 20));
             } catch (error) {
                 console.error('Error fetching logs:', error);
             }
@@ -91,4 +91,11 @@ export function AccordionLogs() {
             </Accordion>
         </Container>
     );
+}
+
+function sortByDate(a: Log, b: Log): number {
+    const aDate = new Date(a.log);
+    const bDate = new Date(b.log);
+
+    return bDate.getTime() - aDate.getTime();
 }
